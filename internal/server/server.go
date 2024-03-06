@@ -18,7 +18,6 @@ type Server struct {
 	db            database.Service
 	healthHandler controllers.HealthHandlerInterface
 	todoHandler   controllers.TodoHandlerInterface
-	todoDao       *database.TodoDAOInterface
 }
 
 func NewServer() *http.Server {

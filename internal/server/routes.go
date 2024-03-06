@@ -3,6 +3,7 @@ package server
 import (
 	"net/http"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	docs "todo-app-mongo/docs"
@@ -13,6 +14,7 @@ import (
 
 func (s *Server) RegisterRoutes() http.Handler {
 	r := gin.Default()
+	r.Use(cors.Default())
 
 	docs.SwaggerInfo.BasePath = "/"
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
@@ -20,7 +22,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.GET("/", s.healthHandler.HelloWorldHandler)
 	r.GET("/health", s.healthHandler.HealthHandler)
 
-	// Todo routes	
+	// Todo routes
 	r.GET("/todos", s.todoHandler.GetAll)
 	r.GET("/todo/:id", s.todoHandler.Get)
 	r.POST("/todo", s.todoHandler.Create)
