@@ -1,15 +1,15 @@
-version: '3.8'
-
+version: "3.9"
 services:
-  mongo:
-    image: mongo:latest
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${DB_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-    ports:
-      - "${DB_PORT}:27017"
-    volumes:
-      - mongo_volume:/data/db
+  app:
+    build:
+      context: .
+    container_name: todo-api
+    restart: unless-stopped
+    expose:
+      - "8080"
+    networks:
+      - nginx_default
 
-volumes:
-  mongo_volume:
+networks:
+  nginx_default:
+    external: true

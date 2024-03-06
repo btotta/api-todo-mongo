@@ -1,25 +1,31 @@
 package server
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+
+	docs "todo-app-mongo/docs"
+
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func (s *Server) RegisterRoutes() http.Handler {
 	r := gin.Default()
-	r.GET("/", s.HelloWorldHandler)
-	r.GET("/health", s.healthHandler)
+
+	docs.SwaggerInfo.BasePath = "/"
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+
+	r.GET("/", s.healthHandler.HelloWorldHandler)
+	r.GET("/health", s.healthHandler.HealthHandler)
+
+	// Todo routes	
+	r.GET("/todos", s.todoHandler.GetAll)
+	r.GET("/todo/:id", s.todoHandler.Get)
+	r.POST("/todo", s.todoHandler.Create)
+	r.PUT("/todo/:id", s.todoHandler.Update)
+	r.DELETE("/todo/:id", s.todoHandler.Delete)
 
 	return r
-}
-
-func (s *Server) HelloWorldHandler(c *gin.Context) {
-	resp := make(map[string]string)
-	resp["message"] = "Hello World"
-
-	c.JSON(http.StatusOK, resp)
-}
-
-func (s *Server) healthHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, s.db.Health())
 }

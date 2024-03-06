@@ -10,6 +10,9 @@ build:
 
 # Run the application
 run:
+	@echo "Initializing Swagger..."
+	@swag init -g internal/server/routes.go -o docs
+	@echo "Running..."
 	@go run cmd/api/main.go
 
 # Create DB container
