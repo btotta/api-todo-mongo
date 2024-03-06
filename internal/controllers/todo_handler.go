@@ -43,8 +43,7 @@ func (t *todoHandler) Create(c *gin.Context) {
 	todo := todoDTO.ToModel()
 	if err := t.todoDAO.Create(c, todo); err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
-		return
-		
+		return		
 	}
 
 	c.JSON(201, todo)
