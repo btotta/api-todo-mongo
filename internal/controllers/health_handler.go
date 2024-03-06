@@ -39,5 +39,9 @@ func (h *healthHandler) HealthHandler(c *gin.Context) {
 // @Success 200 {object} string
 // @Router / [get]
 func (h *healthHandler) HelloWorldHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, "Hello World")
+	body := map[string]string{
+		"message": "Hello World",
+	}
+
+	c.JSON(http.StatusOK, body)
 }
