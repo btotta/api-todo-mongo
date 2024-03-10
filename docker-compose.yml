@@ -8,8 +8,8 @@ services:
     expose:
       - "8080"
     networks:
-      - nginx_default
+      - internal
 
 networks:
-  nginx_default:
+  internal:
     external: true
