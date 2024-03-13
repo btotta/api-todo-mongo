@@ -43,7 +43,7 @@ func (t *todoHandler) Create(c *gin.Context) {
 	todo := todoDTO.ToModel()
 	if err := t.todoDAO.Create(c, todo); err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
-		return		
+		return
 	}
 
 	c.JSON(201, todo)
@@ -83,6 +83,7 @@ func (t *todoHandler) GetAll(c *gin.Context) {
 
 	var limit int64
 	var offset int64
+	var search string
 
 	l := c.Query("limit")
 	if l == "" {
@@ -98,13 +99,18 @@ func (t *todoHandler) GetAll(c *gin.Context) {
 		offset, _ = strconv.ParseInt(o, 10, 64)
 	}
 
-	todos, err := t.todoDAO.GetAll(c, limit, offset)
+	s := c.Query("search")
+	if s != "" {
+		search = s
+	}
+
+	todos, count, err := t.todoDAO.GetAll(c, limit, offset, search)
 	if err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(200, dtos.NewPageDTO(int64(len(todos)), offset, todos))
+	c.JSON(200, dtos.NewPageDTO(int64(len(todos)), offset, count, todos))
 
 }
 

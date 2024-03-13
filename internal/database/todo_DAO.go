@@ -13,7 +13,7 @@ import (
 type TodoDAOInterface interface {
 	Create(ctx context.Context, todo *models.Todo) error
 	Get(ctx context.Context, id string) (*models.Todo, error)
-	GetAll(ctx context.Context, limit int64, page int64) ([]*models.Todo, error)
+	GetAll(ctx context.Context, limit int64, page int64, search string) ([]*models.Todo, int64, error)
 	Update(ctx context.Context, id string, todo *models.Todo) error
 	Delete(ctx context.Context, id string) error
 }
@@ -49,25 +49,37 @@ func (t *todoDAO) Get(ctx context.Context, id string) (*models.Todo, error) {
 	return todo, nil
 }
 
-func (t *todoDAO) GetAll(ctx context.Context, limit int64, page int64) ([]*models.Todo, error) {
+func (t *todoDAO) GetAll(ctx context.Context, limit int64, page int64, search string) ([]*models.Todo, int64, error) {
 	var todos []*models.Todo
-	cursor, err := t.collection.Find(ctx, bson.M{}, &options.FindOptions{Limit: &limit, Skip: &page})
+
+	filter := bson.M{}
+	if search != "" {
+		filter["$or"] = []bson.M{
+			{"title": bson.M{"$regex": primitive.Regex{Pattern: search, Options: "i"}}},
+			{"description": bson.M{"$regex": primitive.Regex{Pattern: search, Options: "i"}}},
+		}
+	}
+
+	cursor, err := t.collection.Find(ctx, filter, &options.FindOptions{Limit: &limit, Skip: &page})
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	defer cursor.Close(ctx)
 	for cursor.Next(ctx) {
 		var todo *models.Todo
-		err := cursor.Decode(&todo)
-		if err != nil {
-			return nil, err
+		if err := cursor.Decode(&todo); err != nil {
+			return nil, 0, err
 		}
 		todos = append(todos, todo)
 	}
 
-	return todos, nil
+	count, err := t.collection.CountDocuments(ctx, filter)
+	if err != nil {
+		return nil, 0, err
+	}
 
+	return todos, count, nil
 }
 
 func (t *todoDAO) Update(ctx context.Context, id string, todo *models.Todo) error {
