@@ -79,7 +79,10 @@ func (t *todoDAO) GetAll(ctx context.Context, limit int64, page int64, search st
 		return nil, 0, err
 	}
 
-	return todos, count, nil
+	//calculate total pages
+	totalPages := (count / limit)
+
+	return todos, totalPages, nil
 }
 
 func (t *todoDAO) Update(ctx context.Context, id string, todo *models.Todo) error {
