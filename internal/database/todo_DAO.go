@@ -12,7 +12,7 @@ import (
 
 type TodoDAOInterface interface {
 	Create(ctx context.Context, todo *models.Todo) error
-	Get(ctx context.Context, id string) (*models.Todo, error)
+	Get(ctx context.Context, id string, userid string) (*models.Todo, error)
 	GetAll(ctx context.Context, limit int64, page int64, search string) ([]*models.Todo, int64, error)
 	Update(ctx context.Context, id string, todo *models.Todo) error
 	Delete(ctx context.Context, id string) error
@@ -33,7 +33,7 @@ func (t *todoDAO) Create(ctx context.Context, todo *models.Todo) error {
 	return err
 }
 
-func (t *todoDAO) Get(ctx context.Context, id string) (*models.Todo, error) {
+func (t *todoDAO) Get(ctx context.Context, id string, userId string) (*models.Todo, error) {
 
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -41,7 +41,7 @@ func (t *todoDAO) Get(ctx context.Context, id string) (*models.Todo, error) {
 	}
 
 	var todo *models.Todo
-	err = t.collection.FindOne(ctx, bson.M{"_id": objectID}).Decode(&todo)
+	err = t.collection.FindOne(ctx, bson.M{"_id": objectID, "user_id": userId}).Decode(&todo)
 	if err != nil {
 		return nil, err
 	}

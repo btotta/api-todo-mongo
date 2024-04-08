@@ -15,4 +15,5 @@ type Todo struct {
 	Completed   bool               `json:"completed" bson:"completed"`
 	CompletedAt time.Time          `json:"completed_at" bson:"completed_at"`
 	CreatedAt   time.Time          `json:"created_at" bson:"created_at"`
+	UserID      primitive.ObjectID `json:"user_id" bson:"user_id"`
 }

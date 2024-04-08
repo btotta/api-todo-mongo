@@ -13,6 +13,48 @@ definitions:
     - description
     - title
     type: object
+  dtos.UserLoginDTO:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  dtos.UserLoginResponseDTO:
+    properties:
+      refreshToken:
+        type: string
+      token:
+        type: string
+    type: object
+  dtos.UserRequestDTO:
+    properties:
+      confirmPassword:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    required:
+    - confirmPassword
+    - email
+    - name
+    - password
+    type: object
+  dtos.UserResponseDTO:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+    type: object
   models.Todo:
     properties:
       completed:
@@ -30,6 +72,17 @@ definitions:
       scheduled_to:
         type: string
       title:
+        type: string
+      user_id:
+        type: string
+    type: object
+  utils.ErrorHandler:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+      timestamp:
         type: string
     type: object
 info:
@@ -65,6 +118,66 @@ paths:
       summary: Health check
       tags:
       - health
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Login
+      parameters:
+      - description: User object
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.UserLoginDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User logged in
+          schema:
+            $ref: '#/definitions/dtos.UserLoginResponseDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorHandler'
+      summary: Login
+      tags:
+      - user
+  /logout:
+    post:
+      consumes:
+      - application/json
+      description: Logout
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - Bearer: []
+      summary: Logout
+      tags:
+      - user
+  /refresh:
+    post:
+      consumes:
+      - application/json
+      description: Refresh token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Token refreshed
+          schema:
+            $ref: '#/definitions/dtos.UserLoginResponseDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorHandler'
+      summary: Refresh token
+      tags:
+      - user
   /todo:
     post:
       consumes:
@@ -84,6 +197,10 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/models.Todo'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorHandler'
       summary: Create a new todo
       tags:
       - todo
@@ -101,6 +218,10 @@ paths:
       responses:
         "204":
           description: No Content
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorHandler'
       summary: Delete a todo by ID
       tags:
       - todo
@@ -121,6 +242,10 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Todo'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorHandler'
       summary: Get a todo by ID
       tags:
       - todo
@@ -147,6 +272,10 @@ paths:
           description: No Content
           schema:
             $ref: '#/definitions/models.Todo'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorHandler'
       summary: Update a todo by ID
       tags:
       - todo
@@ -175,7 +304,109 @@ paths:
             items:
               $ref: '#/definitions/models.Todo'
             type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.ErrorHandler'
       summary: Get all todos
       tags:
       - todo
+  /user:
+    delete:
+      consumes:
+      - application/json
+      description: Delete user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - Bearer: []
+      summary: Delete user
+      tags:
+      - user
+    get:
+      consumes:
+      - application/json
+      description: Get user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User found
+          schema:
+            $ref: '#/definitions/dtos.UserResponseDTO'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.ErrorHandler'
+      security:
+      - Bearer: []
+      summary: Get user by ID
+      tags:
+      - user
+    post:
+      consumes:
+      - application/json
+      description: Create a new user
+      parameters:
+      - description: User object
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.UserRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: User created
+          schema:
+            $ref: '#/definitions/dtos.UserResponseDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorHandler'
+      summary: Create a new user
+      tags:
+      - user
+    put:
+      consumes:
+      - application/json
+      description: Update user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: User object
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.UserRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User updated
+          schema:
+            $ref: '#/definitions/dtos.UserResponseDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorHandler'
+      security:
+      - Bearer: []
+      summary: Update user
+      tags:
+      - user
 swagger: "2.0"

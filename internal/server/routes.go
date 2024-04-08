@@ -13,6 +13,7 @@ import (
 )
 
 func (s *Server) RegisterRoutes() http.Handler {
+
 	r := gin.Default()
 	r.Use(cors.Default())
 
@@ -22,12 +23,30 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.GET("/", s.healthHandler.HelloWorldHandler)
 	r.GET("/health", s.healthHandler.HealthHandler)
 
-	// Todo routes
+	//User routes
+	r.POST("/user", s.userHandler.Create)
+	r.POST("/login", s.userHandler.Login)
+
+	// Middleware
+	r.Use(s.authMiddleware.AuthMiddleware())
+
+	//Private routes
+	r.PUT("/user", s.userHandler.Update)
+	r.DELETE("/user", s.userHandler.Delete)
+	r.GET("/user", s.userHandler.GetUser)
+	r.POST("/refresh", s.userHandler.Refresh)
+	r.POST("/logout", s.userHandler.Logout)
+
+	//Todo routes
+	s.todoRoutes(r)
+
+	return r
+}
+
+func (s *Server) todoRoutes(r *gin.Engine) {
 	r.GET("/todos", s.todoHandler.GetAll)
 	r.GET("/todo/:id", s.todoHandler.Get)
 	r.POST("/todo", s.todoHandler.Create)
 	r.PUT("/todo/:id", s.todoHandler.Update)
 	r.DELETE("/todo/:id", s.todoHandler.Delete)
-
-	return r
 }

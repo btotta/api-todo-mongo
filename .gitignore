@@ -24,3 +24,6 @@ tmp/
 
 # .env file
 .env
+
+# main binary
+main
