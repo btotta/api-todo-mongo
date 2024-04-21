@@ -118,66 +118,6 @@ paths:
       summary: Health check
       tags:
       - health
-  /login:
-    post:
-      consumes:
-      - application/json
-      description: Login
-      parameters:
-      - description: User object
-        in: body
-        name: user
-        required: true
-        schema:
-          $ref: '#/definitions/dtos.UserLoginDTO'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: User logged in
-          schema:
-            $ref: '#/definitions/dtos.UserLoginResponseDTO'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/utils.ErrorHandler'
-      summary: Login
-      tags:
-      - user
-  /logout:
-    post:
-      consumes:
-      - application/json
-      description: Logout
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-      security:
-      - Bearer: []
-      summary: Logout
-      tags:
-      - user
-  /refresh:
-    post:
-      consumes:
-      - application/json
-      description: Refresh token
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Token refreshed
-          schema:
-            $ref: '#/definitions/dtos.UserLoginResponseDTO'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/utils.ErrorHandler'
-      summary: Refresh token
-      tags:
-      - user
   /todo:
     post:
       consumes:
@@ -407,6 +347,66 @@ paths:
       security:
       - Bearer: []
       summary: Update user
+      tags:
+      - user
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      description: Login
+      parameters:
+      - description: User object
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.UserLoginDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User logged in
+          schema:
+            $ref: '#/definitions/dtos.UserLoginResponseDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorHandler'
+      summary: Login
+      tags:
+      - user
+  /user/logout:
+    post:
+      consumes:
+      - application/json
+      description: Logout
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - Bearer: []
+      summary: Logout
+      tags:
+      - user
+  /user/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Refresh token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Token refreshed
+          schema:
+            $ref: '#/definitions/dtos.UserLoginResponseDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrorHandler'
+      summary: Refresh token
       tags:
       - user
 swagger: "2.0"
