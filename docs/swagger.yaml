@@ -55,7 +55,7 @@ definitions:
       name:
         type: string
     type: object
-  models.Todo:
+  entity.Todo:
     properties:
       completed:
         type: boolean
@@ -196,7 +196,7 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/models.Todo'
+            $ref: '#/definitions/entity.Todo'
         "400":
           description: Bad Request
           schema:
@@ -241,7 +241,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.Todo'
+            $ref: '#/definitions/entity.Todo'
         "500":
           description: Internal Server Error
           schema:
@@ -268,10 +268,10 @@ paths:
       produces:
       - application/json
       responses:
-        "204":
-          description: No Content
+        "200":
+          description: OK
           schema:
-            $ref: '#/definitions/models.Todo'
+            $ref: '#/definitions/entity.Todo'
         "500":
           description: Internal Server Error
           schema:
@@ -302,7 +302,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/models.Todo'
+              $ref: '#/definitions/entity.Todo'
             type: array
         "500":
           description: Internal Server Error

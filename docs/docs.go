@@ -183,7 +183,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/models.Todo"
+                            "$ref": "#/definitions/entity.Todo"
                         }
                     },
                     "400": {
@@ -221,7 +221,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Todo"
+                            "$ref": "#/definitions/entity.Todo"
                         }
                     },
                     "500": {
@@ -263,10 +263,10 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "204": {
-                        "description": "No Content",
+                    "200": {
+                        "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Todo"
+                            "$ref": "#/definitions/entity.Todo"
                         }
                     },
                     "500": {
@@ -343,7 +343,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.Todo"
+                                "$ref": "#/definitions/entity.Todo"
                             }
                         }
                     },
@@ -596,7 +596,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.Todo": {
+        "entity.Todo": {
             "type": "object",
             "properties": {
                 "completed": {

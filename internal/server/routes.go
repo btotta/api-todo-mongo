@@ -7,6 +7,9 @@ import (
 	"github.com/gin-gonic/gin"
 
 	docs "todo-app-mongo/docs"
+	"todo-app-mongo/internal/database"
+	"todo-app-mongo/internal/handlers"
+	"todo-app-mongo/internal/pkg/middleware"
 
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -17,36 +20,46 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r := gin.Default()
 	r.Use(cors.Default())
 
+	// Initialize DAOs
+	todoDao := database.NewTodoDAO(*s.db.GetDB())
+	userDao := database.NewUserDAO(*s.db.GetDB())
+
+	// Initialize Handlers
+	healthHandler := handlers.NewHealthController(s.db)
+	todoHandler := handlers.NewTodoHandler(todoDao, userDao)
+	userHandler := handlers.NewUserHandler(userDao)
+
+	// Swagger
 	docs.SwaggerInfo.BasePath = "/"
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
-	r.GET("/", s.healthHandler.HelloWorldHandler)
-	r.GET("/health", s.healthHandler.HealthHandler)
+	// Health routes
+	r.GET("/", healthHandler.HelloWorldHandler)
+	r.GET("/health", healthHandler.HealthHandler)
 
 	//User routes
-	r.POST("/user", s.userHandler.Create)
-	r.POST("/login", s.userHandler.Login)
+	user := r.Group("/user")
+	{
+		user.POST("", userHandler.Create)
+		user.GET("/:id", middleware.AuthMiddleware(), userHandler.GetUser)
+		user.PUT("/:id", middleware.AuthMiddleware(), userHandler.Update)
+		user.DELETE("/:id", middleware.AuthMiddleware(), userHandler.Delete)
 
-	// Middleware
-	r.Use(s.authMiddleware.AuthMiddleware())
-
-	//Private routes
-	r.PUT("/user", s.userHandler.Update)
-	r.DELETE("/user", s.userHandler.Delete)
-	r.GET("/user", s.userHandler.GetUser)
-	r.POST("/refresh", s.userHandler.Refresh)
-	r.POST("/logout", s.userHandler.Logout)
+		//Auth routes
+		user.POST("/login", userHandler.Login)
+		user.POST("/refresh", middleware.AuthMiddleware(), userHandler.Refresh)
+		user.POST("/logout", middleware.AuthMiddleware(), userHandler.Logout)
+	}
 
 	//Todo routes
-	s.todoRoutes(r)
+	todo := r.Group("/todo")
+	{
+		todo.GET("/pagination", middleware.AuthMiddleware(), todoHandler.GetAll)
+		todo.GET("/:id", middleware.AuthMiddleware(), todoHandler.Get)
+		todo.POST("", middleware.AuthMiddleware(), todoHandler.Create)
+		todo.PUT("/:id", middleware.AuthMiddleware(), todoHandler.Update)
+		todo.DELETE("/:id", middleware.AuthMiddleware(), todoHandler.Delete)
+	}
 
 	return r
-}
-
-func (s *Server) todoRoutes(r *gin.Engine) {
-	r.GET("/todos", s.todoHandler.GetAll)
-	r.GET("/todo/:id", s.todoHandler.Get)
-	r.POST("/todo", s.todoHandler.Create)
-	r.PUT("/todo/:id", s.todoHandler.Update)
-	r.DELETE("/todo/:id", s.todoHandler.Delete)
 }
