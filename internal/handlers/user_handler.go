@@ -62,7 +62,7 @@ func (u *UserHandler) Create(c *gin.Context) {
 // @Param user body dtos.UserLoginDTO true "User object"
 // @Success 200 {object} dtos.UserLoginResponseDTO "User logged in"
 // @Failure 400 {object} utils.ErrorHandler
-// @Router /login [post]
+// @Router /user/login [post]
 func (u *UserHandler) Login(c *gin.Context) {
 
 	var dto dtos.UserLoginDTO
@@ -178,7 +178,7 @@ func (u *UserHandler) Update(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Success 200
-// @Router /logout [post]
+// @Router /user/logout [post]
 func (u *UserHandler) Logout(c *gin.Context) {
 
 	token := c.GetHeader("Authorization")
@@ -232,7 +232,7 @@ func (u *UserHandler) Delete(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} dtos.UserLoginResponseDTO "Token refreshed"
 // @Failure 400 {object} utils.ErrorHandler
-// @Router /refresh [post]
+// @Router /user/refresh [post]
 func (u *UserHandler) Refresh(c *gin.Context) {
 
 	token := c.GetHeader("Authorization")
