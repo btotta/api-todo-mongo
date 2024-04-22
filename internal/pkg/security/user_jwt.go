@@ -1,6 +1,7 @@
 package security
 
 import (
+	"errors"
 	"os"
 	"strconv"
 	"time"
@@ -55,6 +56,11 @@ func GenerateRefreshToken(email string) (string, error) {
 }
 
 func ValidateToken(token string) (string, error) {
+
+	if IsLoggedOff(token) {
+		return "", errors.New("invalid token")
+	}
+
 	claims := &Claims{}
 
 	tkn, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
@@ -71,6 +77,11 @@ func ValidateToken(token string) (string, error) {
 }
 
 func ValidateRefreshToken(token string) (string, error) {
+
+	if IsLoggedOff(token) {
+		return "", errors.New("invalid token")
+	}
+
 	claims := &Claims{}
 
 	tkn, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
