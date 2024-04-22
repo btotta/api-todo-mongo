@@ -178,6 +178,8 @@ func (u *UserHandler) Update(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Success 200
+// @Param Authorization header string true "Token"
+// @Param Refresh header string true "Refresh token"
 // @Router /user/logout [post]
 func (u *UserHandler) Logout(c *gin.Context) {
 
@@ -232,6 +234,8 @@ func (u *UserHandler) Delete(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Success 200 {object} dtos.UserLoginResponseDTO "Token refreshed"
+// @Param Authorization header string true "Token"
+// @Param Refresh header string true "Refresh token"
 // @Failure 400 {object} utils.ErrorHandler
 // @Router /user/refresh [post]
 func (u *UserHandler) Refresh(c *gin.Context) {
