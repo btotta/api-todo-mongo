@@ -47,7 +47,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 		//Auth routes
 		user.POST("/login", userHandler.Login)
-		user.POST("/refresh", middleware.AuthMiddleware(), userHandler.Refresh)
+		user.POST("/refresh", userHandler.Refresh)
 		user.POST("/logout", middleware.AuthMiddleware(), userHandler.Logout)
 	}
 
