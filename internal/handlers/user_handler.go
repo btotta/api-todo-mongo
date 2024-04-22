@@ -186,6 +186,7 @@ func (u *UserHandler) Logout(c *gin.Context) {
 
 	if token == "" || refreshtoken == "" {
 		utils.DefaultErrorResponse(c, 400, "Invalid request")
+		return
 	}
 
 	security.LogOff(token)
@@ -240,6 +241,7 @@ func (u *UserHandler) Refresh(c *gin.Context) {
 
 	if token == "" || refreshtoken == "" {
 		utils.DefaultErrorResponse(c, 400, "Invalid request")
+		return
 	}
 
 	email, err := security.ValidateRefreshToken(refreshtoken)
@@ -248,7 +250,7 @@ func (u *UserHandler) Refresh(c *gin.Context) {
 		return
 	}
 
-	if !security.IsLoggedOff(token) {
+	if security.IsLoggedOff(token) {
 		utils.DefaultErrorResponse(c, 401, "Invalid token")
 		return
 	}
