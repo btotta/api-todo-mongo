@@ -219,7 +219,7 @@ paths:
       summary: Update a todo by ID
       tags:
       - todo
-  /todos:
+  /todo/pagination:
     get:
       consumes:
       - application/json

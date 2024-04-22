@@ -89,9 +89,9 @@ func (t *TodoHandler) Get(c *gin.Context) {
 // @Produce json
 // @Success 200 {array} entity.Todo
 // @Failure 500 {object} utils.ErrorHandler
-// @Router /todos [get]
 // @Param limit query int false "Limit" default(10)
 // @Param offset query int false "Offset" default(0)
+// @Router /todo/pagination [get]
 func (t *TodoHandler) GetAll(c *gin.Context) {
 
 	var limit int64
