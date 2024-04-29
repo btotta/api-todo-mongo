@@ -3,7 +3,6 @@ package server
 import (
 	"net/http"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	docs "todo-app-mongo/docs"
@@ -18,7 +17,7 @@ import (
 func (s *Server) RegisterRoutes() http.Handler {
 
 	r := gin.Default()
-	r.Use(cors.Default())
+	r.Use(middleware.CorsMiddleware())
 
 	// Initialize DAOs
 	todoDao := database.NewTodoDAO(*s.db.GetDB())
