@@ -152,7 +152,7 @@ func (t *TodoHandler) Update(c *gin.Context) {
 		return
 	}
 
-	todo := todoDTO.ToModel()
+	todo := todoDTO.ToModelUpdate()
 	if err := t.todoDAO.Update(c, id, todo); err != nil {
 		utils.DefaultErrorResponse(c, 500, "Error updating todo")
 		return

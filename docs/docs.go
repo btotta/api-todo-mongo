@@ -474,6 +474,22 @@ const docTemplate = `{
                     "user"
                 ],
                 "summary": "Logout",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Refresh token",
+                        "name": "Refresh",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK"
@@ -494,6 +510,22 @@ const docTemplate = `{
                     "user"
                 ],
                 "summary": "Refresh token",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Refresh token",
+                        "name": "Refresh",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Token refreshed",

@@ -96,7 +96,9 @@ func (t *todoDAO) Update(ctx context.Context, id string, todo *entity.Todo) erro
 		return err
 	}
 
-	_, err = t.collection.UpdateOne(ctx, bson.M{"_id": objectID}, bson.M{"$set": todo})
+	todo.ID = objectID
+
+	_, err = t.collection.UpdateByID(ctx, objectID, bson.M{"$set": todo})
 	return err
 }
 

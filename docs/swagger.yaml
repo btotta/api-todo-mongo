@@ -380,6 +380,17 @@ paths:
       consumes:
       - application/json
       description: Logout
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Refresh token
+        in: header
+        name: Refresh
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -395,6 +406,17 @@ paths:
       consumes:
       - application/json
       description: Refresh token
+      parameters:
+      - description: Token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Refresh token
+        in: header
+        name: Refresh
+        required: true
+        type: string
       produces:
       - application/json
       responses:
