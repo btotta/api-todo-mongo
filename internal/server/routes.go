@@ -36,6 +36,11 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r.GET("/", healthHandler.HelloWorldHandler)
 	r.GET("/health", healthHandler.HealthHandler)
 
+	// Cors
+	r.OPTIONS("/*any", func(c *gin.Context) {
+		c.AbortWithStatus(http.StatusNoContent)
+	})
+
 	//User routes
 	user := r.Group("/user")
 	{
